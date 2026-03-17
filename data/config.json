@@ -1,16 +1,33 @@
 {
   "menuSemaine": {
-    "image": null
+    "image": "/uploads/menu-semaine/1773737958868.png",
+    "texte": "🔥 MENU DE LA SEMAINE CHEZ GOETZ & CO 🔥  \nBon… on a une question très sérieuse pour toi 👇  \n👉 Quel jour tu viens manger cette semaine ?  \nParce que le programme est plutôt solide 😏  \n\n🍝 LUNDI  \nScaloppine alla pizzaiola, linguine – 9,50€\n\n🇸🇪 MARDI  \nKorv Stroganoff, purée de pommes de terre maison, poivrons grillés – 9,50€  \n➡️ Petite info : c’est une recette familiale suédoise, un vrai plat de famille qui tient bien au corps.\n\n👨‍👩‍👧 MERCREDI  \nFleischkichle, sauce crème, pommes de terre sautées, carottes – 9,50€  \n➡️ Le plat parfait pour les enfants !  \nSi ton enfant aime les boulettes / steak haché… il va adorer.\n\n🍯 JEUDI  \nPorc au caramel, riz basmati, poireau frit – 9,50€\n\n🍔 LES BURGERS (sur commande)  \n\n🔥 Kit Burger Classique – 7€  \nbun’s, steak de bœuf limousin, emmental, tomate, cornichon, oignon rouge, salade  \n\n🔥 Kit Burger Alsacien – 8€  \nbun’s, fleischkichle , lard forêt noire, munster, tomate, oignon rouge, cornichon, salade\n\n🐟 VENDREDI  \nFilet de saumon, risotto, légumes – 10,50€\n\n🥩 SAMEDI  \nRosbif à l’alsacienne, spaetzle maison – 14€  \n➡️ Le grand classique du week-end.\n\n👇 Maintenant on veut savoir :\n1️⃣ Le plat qui te fait venir cette semaine ?\n2️⃣ Tu es plutôt Burger 🍔 ou Rosbif 🥩 ?\n"
   },
   "menusSpeciaux": {
     "actif": true,
+    "texte": "",
     "evenements": {
       "paques": {
         "actif": true,
         "label": "🐣 Pâques",
-        "images": ["Paques1.PNG", "Paques-2.PNG"]
+        "images": [
+          "Paques1.PNG",
+          "Paques-2.PNG"
+        ]
       }
     }
   },
-  "galerie": []
+  "galerie": [],
+  "accueil": {
+    "texte": "Chez Goetz & Co, nous vous proposons une sélection de viandes soigneusement choisies auprès de producteurs locaux. Artisans bouchers depuis plusieurs générations, nous mettons notre savoir-faire au service de votre table — que ce soit pour le quotidien ou les grandes occasions. Venez nous rendre visite à Hochfelden !"
+  },
+  "horaires": [
+    { "jour": "Lundi",    "horaire": "8h00 – 12h30 / 15h00 – 19h00" },
+    { "jour": "Mardi",    "horaire": "8h00 – 12h30 / 15h00 – 19h00" },
+    { "jour": "Mercredi", "horaire": "8h00 – 12h30" },
+    { "jour": "Jeudi",    "horaire": "8h00 – 12h30 / 15h00 – 19h00" },
+    { "jour": "Vendredi", "horaire": "8h00 – 12h30 / 15h00 – 19h00" },
+    { "jour": "Samedi",   "horaire": "7h30 – 13h00" },
+    { "jour": "Dimanche", "horaire": "Fermé" }
+  ]
 }

@@ -8,8 +8,8 @@
   --vert-clair:   #2d5a52;
   --sable:        #C4A882;
   --sable-clair:  #d9c4a3;
-  --texte:        #2a1f14;
-  --texte-doux:   #5a4a3a;
+  --texte:        #0f0a05;
+  --texte-doux:   #2a1f14;
   --ombre:        rgba(42, 31, 20, 0.12);
 }
 
@@ -19,7 +19,9 @@
   padding: 0;
 }
 
-html {
+html, body {
+  width: 100%;
+  min-height: 100vh;
   scroll-behavior: smooth;
 }
 

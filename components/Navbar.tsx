@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useState } from 'react'
 
-type Tab = 'accueil' | 'menu' | 'speciaux' | 'galerie' | 'contact'
+type Tab = 'accueil' | 'menu' | 'speciaux' | 'galerie' | 'horaires et contact'
 
 interface NavbarProps {
   activeTab: Tab
@@ -15,7 +15,7 @@ const tabs: { id: Tab; label: string }[] = [
   { id: 'menu',     label: 'Menu de la semaine' },
   { id: 'speciaux', label: 'Menus spéciaux' },
   { id: 'galerie',  label: 'Galerie' },
-  { id: 'contact',  label: 'Contact' },
+  { id: 'horaires et contact',  label: 'Horaires & Contact' },
 ]
 
 export default function Navbar({ activeTab, onTabChange }: NavbarProps) {

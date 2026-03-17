@@ -7,7 +7,7 @@ import { SiteConfig } from '@/lib/config'
 // Mot de passe admin — à changer ici ou via variable d'environnement NEXT_PUBLIC_ADMIN_PASSWORD
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'goetz2024'
 
-type Section = 'menu' | 'speciaux' | 'galerie'
+type Section = 'accueil' | 'menu' | 'speciaux' | 'galerie'
 
 export default function AdminPage() {
   const [auth, setAuth] = useState(false)
@@ -35,7 +35,7 @@ export default function AdminPage() {
   }
 
   const loadConfig = () => {
-    fetch('/api/config').then(r => r.json()).then(setConfig)
+    fetch('/api/config', { cache: 'no-store' }).then(r => r.json()).then(setConfig)
   }
 
   const showMessage = (type: 'ok' | 'err', text: string) => {
@@ -150,6 +150,7 @@ export default function AdminPage() {
           </div>
           <input
             type="password"
+            autoComplete="new-password"
             placeholder="Mot de passe"
             value={passwordInput}
             onChange={e => { setPasswordInput(e.target.value); setPasswordError(false) }}
@@ -206,14 +207,15 @@ export default function AdminPage() {
         </div>
       )}
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div style={{ width: '100%', maxWidth: '860px', margin: '0 auto', padding: '2rem 1.5rem' }}>
 
         {/* Navigation entre sections admin */}
-        <div className="flex gap-2 mb-8 flex-wrap">
+        <div className="flex gap-2 mb-8 flex-wrap justify-center">
           {([
             { id: 'menu',     label: '🥩 Menu de la semaine' },
             { id: 'speciaux', label: '🎉 Menus spéciaux' },
             { id: 'galerie',  label: '📷 Galerie' },
+            { id: 'accueil',  label: '🏠 Accueil & Horaires' },
           ] as const).map(s => (
             <button key={s.id} onClick={() => setActiveSection(s.id)}
                     className="px-5 py-2 rounded transition-colors"
@@ -232,6 +234,76 @@ export default function AdminPage() {
         {/* ========================
             MENU DE LA SEMAINE
         ======================== */}
+        {/* ========================
+            ACCUEIL & HORAIRES
+        ======================== */}
+        {activeSection === 'accueil' && config && (
+          <div className="flex flex-col gap-6">
+            <h2 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--vert)', fontSize: '1.6rem' }}>
+              Accueil &amp; Horaires
+            </h2>
+
+            {/* Texte de présentation */}
+            <div className="p-4 rounded" style={{ backgroundColor: 'var(--creme-sombre)', border: '1px solid var(--sable-clair)' }}>
+              <p className="mb-2 font-semibold" style={{ color: 'var(--vert)', fontFamily: "'EB Garamond', serif" }}>
+                Texte de présentation (page Accueil) :
+              </p>
+              <textarea
+                rows={5}
+                value={config.accueil?.texte || ''}
+                onChange={e => setConfig(c => c ? { ...c, accueil: { texte: e.target.value } } : c)}
+                className="w-full px-3 py-2 rounded mb-2"
+                style={{ fontFamily: "'EB Garamond', serif", fontSize: '1rem', border: '1px solid var(--sable)', backgroundColor: 'var(--creme)', color: 'var(--texte)', resize: 'vertical' }}
+              />
+              <button
+                onClick={async () => {
+                  await fetch('/api/config', { method: 'POST', body: JSON.stringify(config), headers: { 'Content-Type': 'application/json' } })
+                  showMessage('ok', 'Texte sauvegardé.')
+                }}
+                className="px-4 py-1.5 rounded"
+                style={{ backgroundColor: 'var(--vert)', color: 'var(--creme)', border: 'none', cursor: 'pointer', fontFamily: "'EB Garamond', serif" }}>
+                Sauvegarder
+              </button>
+            </div>
+
+            {/* Horaires */}
+            <div className="p-4 rounded" style={{ backgroundColor: 'var(--creme-sombre)', border: '1px solid var(--sable-clair)' }}>
+              <p className="mb-3 font-semibold" style={{ color: 'var(--vert)', fontFamily: "'EB Garamond', serif" }}>
+                Horaires d'ouverture :
+              </p>
+              <div className="flex flex-col gap-2 mb-3">
+                {(config.horaires || []).map((row, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <span className="w-24 font-semibold text-sm" style={{ color: 'var(--vert)', fontFamily: "'EB Garamond', serif" }}>
+                      {row.jour}
+                    </span>
+                    <input
+                      type="text"
+                      value={row.horaire}
+                      onChange={e => {
+                        const updated = [...config.horaires]
+                        updated[i] = { ...updated[i], horaire: e.target.value }
+                        setConfig(c => c ? { ...c, horaires: updated } : c)
+                      }}
+                      className="flex-1 px-3 py-1.5 rounded"
+                      style={{ fontFamily: "'EB Garamond', serif", fontSize: '0.95rem', border: '1px solid var(--sable)', backgroundColor: 'var(--creme)', color: 'var(--texte)' }}
+                    />
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={async () => {
+                  await fetch('/api/config', { method: 'POST', body: JSON.stringify(config), headers: { 'Content-Type': 'application/json' } })
+                  showMessage('ok', 'Horaires sauvegardés.')
+                }}
+                className="px-4 py-1.5 rounded"
+                style={{ backgroundColor: 'var(--vert)', color: 'var(--creme)', border: 'none', cursor: 'pointer', fontFamily: "'EB Garamond', serif" }}>
+                Sauvegarder les horaires
+              </button>
+            </div>
+          </div>
+        )}
+
         {activeSection === 'menu' && (
           <div>
             <h2 className="mb-6" style={{ fontFamily: "'Playfair Display', serif", color: 'var(--vert)', fontSize: '1.6rem' }}>
@@ -257,6 +329,31 @@ export default function AdminPage() {
                 Aucune image de menu en ligne pour le moment.
               </p>
             )}
+
+            {/* Texte au-dessus du menu */}
+            <div className="p-4 rounded mb-4" style={{ backgroundColor: 'var(--creme-sombre)', border: '1px solid var(--sable-clair)' }}>
+              <p className="mb-2 font-semibold" style={{ color: 'var(--vert)', fontFamily: "'EB Garamond', serif" }}>
+                Texte affiché au-dessus du menu :
+              </p>
+              <textarea
+                rows={6}
+                value={config?.menuSemaine.texte || ''}
+                onChange={e => setConfig(c => c ? { ...c, menuSemaine: { ...c.menuSemaine, texte: e.target.value } } : c)}
+                placeholder="Ex : Commandes à passer avant le vendredi midi..."
+                className="w-full px-3 py-2 rounded mb-2"
+                style={{ fontFamily: "'EB Garamond', serif", fontSize: '1rem', border: '1px solid var(--sable)', backgroundColor: 'var(--creme)', color: 'var(--texte)', resize: 'vertical' }}
+              />
+              <button
+                onClick={async () => {
+                  if (!config) return
+                  await fetch('/api/config', { method: 'POST', body: JSON.stringify(config), headers: { 'Content-Type': 'application/json' } })
+                  showMessage('ok', 'Texte sauvegardé.')
+                }}
+                className="px-4 py-1.5 rounded"
+                style={{ backgroundColor: 'var(--vert)', color: 'var(--creme)', border: 'none', cursor: 'pointer', fontFamily: "'EB Garamond', serif" }}>
+                Sauvegarder le texte
+              </button>
+            </div>
 
             <div className="p-4 rounded" style={{ backgroundColor: 'var(--creme-sombre)', border: '1px solid var(--sable-clair)' }}>
               <p className="mb-3 font-semibold" style={{ color: 'var(--vert)', fontFamily: "'EB Garamond', serif" }}>
@@ -286,6 +383,31 @@ export default function AdminPage() {
             <h2 className="mb-6" style={{ fontFamily: "'Playfair Display', serif", color: 'var(--vert)', fontSize: '1.6rem' }}>
               Menus spéciaux
             </h2>
+
+            {/* Texte au-dessus des menus spéciaux */}
+            <div className="p-4 rounded mb-4" style={{ backgroundColor: 'var(--creme-sombre)', border: '1px solid var(--sable-clair)' }}>
+              <p className="mb-2 font-semibold" style={{ color: 'var(--vert)', fontFamily: "'EB Garamond', serif" }}>
+                Texte affiché au-dessus des menus spéciaux :
+              </p>
+              <textarea
+                rows={6}
+                value={config?.menusSpeciaux.texte || ''}
+                onChange={e => setConfig(c => c ? { ...c, menusSpeciaux: { ...c.menusSpeciaux, texte: e.target.value } } : c)}
+                placeholder="Ex : Commandes ouvertes jusqu'au 15 avril..."
+                className="w-full px-3 py-2 rounded mb-2"
+                style={{ fontFamily: "'EB Garamond', serif", fontSize: '1rem', border: '1px solid var(--sable)', backgroundColor: 'var(--creme)', color: 'var(--texte)', resize: 'vertical' }}
+              />
+              <button
+                onClick={async () => {
+                  if (!config) return
+                  await fetch('/api/config', { method: 'POST', body: JSON.stringify(config), headers: { 'Content-Type': 'application/json' } })
+                  showMessage('ok', 'Texte sauvegardé.')
+                }}
+                className="px-4 py-1.5 rounded"
+                style={{ backgroundColor: 'var(--vert)', color: 'var(--creme)', border: 'none', cursor: 'pointer', fontFamily: "'EB Garamond', serif" }}>
+                Sauvegarder le texte
+              </button>
+            </div>
 
             {/* Toggle global */}
             <div className="flex items-center gap-4 p-4 rounded mb-6"

@@ -5,14 +5,14 @@ import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import { SiteConfig } from '@/lib/config'
 
-type Tab = 'accueil' | 'menu' | 'speciaux' | 'galerie' | 'contact'
+type Tab = 'accueil' | 'menu' | 'speciaux' | 'galerie' | 'horaires et contact'
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>('accueil')
   const [config, setConfig] = useState<SiteConfig | null>(null)
 
   useEffect(() => {
-    fetch('/api/config')
+    fetch('/api/config', { cache: 'no-store' })
       .then(r => r.json())
       .then(setConfig)
   }, [])
@@ -21,13 +21,36 @@ export default function Home() {
     <>
       <Navbar activeTab={activeTab} onTabChange={setActiveTab} />
 
-      <main style={{ marginTop: '70px', backgroundColor: 'var(--creme)', minHeight: 'calc(100vh - 70px)' }}>
+      {/* Image de fond — fixe, couvre toutes les pages */}
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundImage: 'url(/hero-bg.jpg)',
+        backgroundSize: 'contain',
+        backgroundPosition: 'center center',
+        backgroundRepeat: 'no-repeat',
+        opacity: 0.15,
+        pointerEvents: 'none',
+        zIndex: 0,
+      }} />
+
+      <main style={{
+        position: 'relative',
+        zIndex: 1,
+        marginTop: '70px',
+        backgroundColor: 'transparent',
+        minHeight: 'calc(100vh - 70px)',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}>
 
         {/* ==============================
             ONGLET 1 — ACCUEIL
         ============================== */}
         {activeTab === 'accueil' && (
-          <div className="fade-in max-w-3xl mx-auto px-4 py-12">
+          <div className="fade-in" style={{ width: '100%', maxWidth: '960px', padding: '3rem 1.5rem' }}>
 
             {/* Hero */}
             <div className="flex flex-col items-center text-center pb-8">
@@ -60,10 +83,7 @@ export default function Home() {
                    borderLeft: '3px solid var(--sable)',
                    paddingLeft: '1.5rem',
                  }}>
-                Chez Goetz &amp; Co, nous vous proposons une sélection de viandes soigneusement choisies
-                auprès de producteurs locaux. Artisans bouchers depuis plusieurs générations, nous mettons
-                notre savoir-faire au service de votre table — que ce soit pour le quotidien ou les grandes
-                occasions. Venez nous rendre visite à Hochfelden&nbsp;!
+                {config?.accueil?.texte || "Chez Goetz & Co, nous vous proposons une sélection de viandes soigneusement choisies auprès de producteurs locaux. Artisans bouchers depuis plusieurs générations, nous mettons notre savoir-faire au service de votre table — que ce soit pour le quotidien ou les grandes occasions. Venez nous rendre visite à Hochfelden !"}
               </p>
             </div>
 
@@ -118,7 +138,7 @@ export default function Home() {
             ONGLET 2 — MENU DE LA SEMAINE
         ============================== */}
         {activeTab === 'menu' && (
-          <div className="fade-in max-w-4xl mx-auto px-4 py-12">
+          <div className="fade-in" style={{ width: '100%', maxWidth: '960px', padding: '3rem 1.5rem' }}>
             <div className="text-center mb-8">
               <h2 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--vert)', fontSize: '2.2rem', fontWeight: 700 }}>
                 Notre menu de la semaine
@@ -126,6 +146,12 @@ export default function Home() {
               <div className="separateur"><span>✦</span></div>
             </div>
 
+            {config?.menuSemaine.texte && (
+              <p className="text-center mb-6 text-lg"
+                 style={{ fontFamily: "'EB Garamond', serif", color: 'var(--texte-doux)', fontStyle: 'italic', borderLeft: '3px solid var(--sable)', paddingLeft: '1rem', textAlign: 'left', maxWidth: '600px', margin: '0 auto 1.5rem', whiteSpace: 'pre-wrap' }}>
+                {config.menuSemaine.texte}
+              </p>
+            )}
             {config?.menuSemaine.image ? (
               <div className="flex flex-col items-center gap-4">
                 <img
@@ -159,13 +185,20 @@ export default function Home() {
             ONGLET 3 — MENUS SPÉCIAUX
         ============================== */}
         {activeTab === 'speciaux' && (
-          <div className="fade-in max-w-4xl mx-auto px-4 py-12">
+          <div className="fade-in" style={{ width: '100%', maxWidth: '960px', padding: '3rem 1.5rem' }}>
             <div className="text-center mb-8">
               <h2 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--vert)', fontSize: '2.2rem', fontWeight: 700 }}>
                 Nos offres spéciales
               </h2>
               <div className="separateur"><span>✦</span></div>
             </div>
+
+            {config?.menusSpeciaux.texte && (
+              <p className="text-center mb-6 text-lg"
+                 style={{ fontFamily: "'EB Garamond', serif", color: 'var(--texte-doux)', fontStyle: 'italic', borderLeft: '3px solid var(--sable)', paddingLeft: '1rem', textAlign: 'left', maxWidth: '600px', margin: '0 auto 1.5rem', whiteSpace: 'pre-wrap' }}>
+                {config.menusSpeciaux.texte}
+              </p>
+            )}
 
             {(() => {
               if (!config?.menusSpeciaux.actif) {
@@ -224,7 +257,7 @@ export default function Home() {
             ONGLET 4 — GALERIE
         ============================== */}
         {activeTab === 'galerie' && (
-          <div className="fade-in max-w-4xl mx-auto px-4 py-12">
+          <div className="fade-in" style={{ width: '100%', maxWidth: '960px', padding: '3rem 1.5rem' }}>
             <div className="text-center mb-8">
               <h2 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--vert)', fontSize: '2.2rem', fontWeight: 700 }}>
                 Nos moments &amp; événements
@@ -262,8 +295,8 @@ export default function Home() {
         {/* ==============================
             ONGLET 5 — CONTACT
         ============================== */}
-        {activeTab === 'contact' && (
-          <div className="fade-in max-w-4xl mx-auto px-4 py-12">
+        {activeTab === 'horaires et contact' && (
+          <div className="fade-in" style={{ width: '100%', maxWidth: '960px', padding: '3rem 1.5rem' }}>
             <div className="text-center mb-8">
               <h2 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--vert)', fontSize: '2.2rem', fontWeight: 700 }}>
                 Nous contacter
@@ -304,26 +337,21 @@ export default function Home() {
                   </h3>
                   <table className="w-full" style={{ fontFamily: "'EB Garamond', serif", fontSize: '0.95rem' }}>
                     <tbody>
-                      {[
-                        { jour: 'Lundi',    h: '8h00 – 12h30 / 15h00 – 19h00' },
-                        { jour: 'Mardi',    h: '8h00 – 12h30 / 15h00 – 19h00' },
-                        { jour: 'Mercredi', h: '8h00 – 12h30' },
-                        { jour: 'Jeudi',    h: '8h00 – 12h30 / 15h00 – 19h00' },
-                        { jour: 'Vendredi', h: '8h00 – 12h30 / 15h00 – 19h00' },
-                        { jour: 'Samedi',   h: '7h30 – 13h00' },
-                        { jour: 'Dimanche', h: 'Fermé', ferme: true },
-                      ].map(row => (
+                      {(config?.horaires || []).map(row => {
+                        const ferme = row.horaire.toLowerCase() === 'fermé'
+                        return (
                         <tr key={row.jour} style={{ borderBottom: '1px solid var(--sable-clair)' }}>
                           <td className="py-1.5 pr-4 font-semibold w-28"
-                              style={{ color: row.ferme ? '#8b2020' : 'var(--vert)' }}>
+                              style={{ color: ferme ? '#8b2020' : 'var(--vert)' }}>
                             {row.jour}
                           </td>
                           <td className="py-1.5"
-                              style={{ color: row.ferme ? '#8b2020' : 'var(--texte-doux)', fontStyle: row.ferme ? 'italic' : 'normal' }}>
-                            {row.h}
+                              style={{ color: ferme ? '#8b2020' : 'var(--texte-doux)', fontStyle: ferme ? 'italic' : 'normal' }}>
+                            {row.horaire}
                           </td>
                         </tr>
-                      ))}
+                        )
+                      })}
                     </tbody>
                   </table>
                 </div>
@@ -332,7 +360,7 @@ export default function Home() {
               <div className="rounded overflow-hidden"
                    style={{ border: '1px solid var(--sable-clair)', boxShadow: '0 4px 20px var(--ombre)' }}>
                 <iframe
-                  src="https://maps.google.com/maps?q=3+place+du+G%C3%A9n%C3%A9ral+Koenig+67270+Hochfelden&output=embed&z=15"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2648.5!2d7.5697548!3d48.758195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4796bd2f4f4baab1:0xdc90c691288b215b!2sGoetz+%26+Co!5e0!3m2!1sfr!2sfr!4v1"
                   width="100%"
                   height="400"
                   style={{ border: 'none', display: 'block' }}
@@ -349,7 +377,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="text-center py-8"
-              style={{ backgroundColor: 'var(--vert)', borderTop: '2px solid var(--sable)' }}>
+              style={{ backgroundColor: 'var(--vert)', borderTop: '2px solid var(--sable)', position: 'relative', zIndex: 1 }}>
         <Image src="/logo.JPG" alt="Logo" width={60} height={60}
                className="rounded-full object-cover mx-auto mb-3"
                style={{ border: '2px solid var(--sable)', opacity: 0.9 }} />

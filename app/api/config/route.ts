@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { readConfig, writeConfig, SiteConfig } from '@/lib/config'
 
+export const dynamic = 'force-dynamic'
+
 // GET /api/config — retourne la configuration actuelle
 export async function GET() {
   try {
