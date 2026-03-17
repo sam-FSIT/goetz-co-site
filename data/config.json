@@ -1,0 +1,16 @@
+{
+  "menuSemaine": {
+    "image": null
+  },
+  "menusSpeciaux": {
+    "actif": true,
+    "evenements": {
+      "paques": {
+        "actif": true,
+        "label": "🐣 Pâques",
+        "images": ["Paques1.PNG", "Paques-2.PNG"]
+      }
+    }
+  },
+  "galerie": []
+}

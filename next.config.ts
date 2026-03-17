@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Permettre les images depuis le dossier public/uploads
+  images: {
+    unoptimized: true,
+  },
 };
 
 export default nextConfig;
