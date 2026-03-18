@@ -55,12 +55,12 @@ export default function Home() {
             {/* Hero */}
             <div className="flex flex-col items-center text-center pb-8">
               <Image
-                src="/logo.JPG"
+                src="/logo.png"
                 alt="Logo Boucherie Goetz & Co"
                 width={240}
                 height={240}
-                className="rounded-full object-cover mb-8"
-                style={{ border: '4px solid var(--sable)', boxShadow: '0 6px 30px var(--ombre)' }}
+                className="object-cover mb-8"
+                style={{ boxShadow: '0 6px 30px var(--ombre)' }}
               />
               <h1 className="font-display text-5xl md:text-6xl font-bold tracking-wide"
                   style={{ color: 'var(--vert)', fontFamily: "'Playfair Display', Georgia, serif" }}>
@@ -378,7 +378,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="text-center py-8"
               style={{ backgroundColor: 'var(--vert)', borderTop: '2px solid var(--sable)', position: 'relative', zIndex: 1 }}>
-        <Image src="/logo.JPG" alt="Logo" width={60} height={60}
+        <Image src="/logo.png" alt="Logo" width={60} height={60}
                className="rounded-full object-cover mx-auto mb-3"
                style={{ border: '2px solid var(--sable)', opacity: 0.9 }} />
         <p style={{ fontFamily: "'Playfair Display', serif", color: 'var(--sable)', fontSize: '1.2rem' }}>

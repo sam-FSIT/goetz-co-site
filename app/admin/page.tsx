@@ -138,7 +138,7 @@ export default function AdminPage() {
         <div className="w-full max-w-sm p-8 rounded"
              style={{ backgroundColor: 'var(--creme-sombre)', border: '1px solid var(--sable)' }}>
           <div className="text-center mb-6">
-            <Image src="/logo.JPG" alt="Logo" width={80} height={80}
+            <Image src="/logo.png" alt="Logo" width={80} height={80}
                    className="rounded-full object-cover mx-auto mb-3"
                    style={{ border: '2px solid var(--sable)' }} />
             <h1 style={{ fontFamily: "'Playfair Display', serif", color: 'var(--vert)', fontSize: '1.4rem' }}>
@@ -183,7 +183,7 @@ export default function AdminPage() {
       <div className="px-6 py-4 flex items-center justify-between"
            style={{ backgroundColor: 'var(--vert)', borderBottom: '2px solid var(--sable)' }}>
         <div className="flex items-center gap-3">
-          <Image src="/logo.JPG" alt="Logo" width={40} height={40}
+          <Image src="/logo.png" alt="Logo" width={40} height={40}
                  className="rounded-full object-cover"
                  style={{ border: '2px solid var(--sable)' }} />
           <span style={{ fontFamily: "'Playfair Display', serif", color: 'var(--sable)', fontSize: '1.1rem' }}>

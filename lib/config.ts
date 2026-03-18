@@ -1,7 +1,6 @@
-import fs from 'fs'
-import path from 'path'
+import { kv } from '@vercel/kv'
 
-const CONFIG_PATH = path.join(process.cwd(), 'data', 'config.json')
+const CONFIG_KEY = 'site-config'
 
 export interface SiteConfig {
   menuSemaine: { image: string | null; texte?: string }
@@ -21,11 +20,12 @@ export interface SiteConfig {
   horaires: { jour: string; horaire: string }[]
 }
 
-export function readConfig(): SiteConfig {
-  const raw = fs.readFileSync(CONFIG_PATH, 'utf-8')
-  return JSON.parse(raw)
+export async function readConfig(): Promise<SiteConfig> {
+  const config = await kv.get<SiteConfig>(CONFIG_KEY)
+  if (!config) throw new Error('Config not found in KV store')
+  return config
 }
 
-export function writeConfig(config: SiteConfig): void {
-  fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2), 'utf-8')
+export async function writeConfig(config: SiteConfig): Promise<void> {
+  await kv.set(CONFIG_KEY, config)
 }

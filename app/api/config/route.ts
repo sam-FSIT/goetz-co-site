@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 // GET /api/config — retourne la configuration actuelle
 export async function GET() {
   try {
-    const config = readConfig()
+    const config = await readConfig()
     return NextResponse.json(config)
   } catch {
     return NextResponse.json({ error: 'Erreur lecture config' }, { status: 500 })
@@ -17,9 +17,9 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body: Partial<SiteConfig> = await request.json()
-    const current = readConfig()
+    const current = await readConfig()
     const updated = { ...current, ...body }
-    writeConfig(updated)
+    await writeConfig(updated)
     return NextResponse.json({ success: true })
   } catch {
     return NextResponse.json({ error: 'Erreur écriture config' }, { status: 500 })

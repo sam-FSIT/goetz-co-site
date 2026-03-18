@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
-import path from 'path'
+import { put } from '@vercel/blob'
 import { readConfig, writeConfig } from '@/lib/config'
 
 // POST /api/upload
@@ -23,25 +22,22 @@ export async function POST(request: Request) {
     }
 
     // Sécuriser le nom de fichier
-    const ext = path.extname(file.name).toLowerCase()
-    const allowedExts = ['.jpg', '.jpeg', '.png', '.webp', '.gif']
+    const ext = file.name.split('.').pop()?.toLowerCase() ?? ''
+    const allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'gif']
     if (!allowedExts.includes(ext)) {
       return NextResponse.json({ error: 'Format non autorisé' }, { status: 400 })
     }
 
     const timestamp = Date.now()
-    const filename = `${timestamp}${ext}`
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', type)
-
-    await mkdir(uploadDir, { recursive: true })
+    const filename = `uploads/${type}/${timestamp}.${ext}`
 
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
-    const filePath = path.join(uploadDir, filename)
-    await writeFile(filePath, buffer)
 
-    const publicPath = `/uploads/${type}/${filename}`
-    const config = readConfig()
+    const blob = await put(filename, buffer, { access: 'public' })
+    const publicPath = blob.url
+
+    const config = await readConfig()
 
     // Mettre à jour la config selon le type
     if (type === 'menu-semaine') {
@@ -61,7 +57,7 @@ export async function POST(request: Request) {
       config.galerie.push(publicPath)
     }
 
-    writeConfig(config)
+    await writeConfig(config)
 
     return NextResponse.json({ success: true, path: publicPath })
   } catch (err) {
